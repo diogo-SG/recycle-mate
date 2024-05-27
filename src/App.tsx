@@ -11,31 +11,30 @@ import AssistantContext, { ResponseMessage } from "./context/AssistantContext";
 import { NotFound } from "./views/NotFound";
 
 function App() {
-	const [assistant, setAssistant] = useState<Assistant | null>(null);
-	const [responseMessage, setResponseMessage] = useState<ResponseMessage | null>(null);
+  const [assistant, setAssistant] = useState<Assistant | null>(null);
+  const [responseMessage, setResponseMessage] = useState<ResponseMessage | null>(null);
 
   return (
     <div className="bg-primary-50 ">
-			<AssistantContext.Provider
-				value={{
-					assistant: assistant,
-					setAssistant: setAssistant,
-					responseMessage: responseMessage,
-					setResponseMessage: setResponseMessage,
-				}}
-			>
-      <Router>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </Router>
-			</AssistantContext.Provider>
+      <AssistantContext.Provider
+        value={{
+          assistant: assistant,
+          setAssistant: setAssistant,
+          responseMessage: responseMessage,
+          setResponseMessage: setResponseMessage,
+        }}>
+        <Router>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AssistantContext.Provider>
     </div>
   );
 }
