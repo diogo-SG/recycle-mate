@@ -1,5 +1,4 @@
 import logo from "../../assets/logo.png";
-import { Button } from "../Button";
 
 export function Navbar() {
   return (
@@ -10,7 +9,6 @@ export function Navbar() {
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RecycleMate</span>
         </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <Button>Get started</Button>
           <button
             data-collapse-toggle="navbar-sticky"
             type="button"
