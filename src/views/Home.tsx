@@ -1,36 +1,87 @@
-import { useEffect, useState } from "react";
+import { Form, Formik } from "formik";
+import { Input } from "../components/Input";
+import { SuccessButton } from "../components/SuccessButton";
 import { Assistant } from "../assistant";
+import { useContext, useEffect } from "react";
+import AssistantContext from "../context/AssistantContext";
+
+async function retryCheckFunction(
+	checkFn: () => Promise<boolean>,
+	interval: number = 500,
+	maxRetries: number = 10
+): Promise<void> {
+	return new Promise((resolve, reject) => {
+		let attempts = 0;
+
+		const executeCheck = async () => {
+			attempts++;
+			const result = await checkFn();
+
+			if (result) {
+				resolve();
+			} else if (attempts >= maxRetries) {
+				reject(new Error("Max retries reached"));
+			} else {
+				setTimeout(executeCheck, interval);
+			}
+		};
+
+		executeCheck();
+	});
+}
 
 export function Home() {
-  const [message, setMessage] = useState<string>("");
-  const [assistantResponse, setAssistantResponse] = useState<string>("");
+	const { assistant, setAssistant } = useContext(AssistantContext);
 
-  useEffect(() => {
-    (async () => {
-      const assistant = new Assistant();
-      console.log(assistant, "assistant");
-      await assistant.Init();
-      await assistant.UserMessage(
-        "json how can I recycle https://franoidelivery.com.br/wp-content/uploads/2021/03/Pet-2-Litros-Coca-Cola-PNG.png"
-      );
-      await assistant.RunThread();
-      const res = await assistant.ResolveRun();
+	async function initAssistant() {
+		const assistant = new Assistant();
+		await assistant.init();
+		setAssistant(assistant);
+	}
 
-      console.log(res, "res");
-      //if (res) setAssistantResponse(res.content[0]);
-    })().catch((err) => console.log(err));
-  }, [message]);
+	async function onImageUpload() {
+		await assistant?.sendMessage(
+			"https://franoidelivery.com.br/wp-content/uploads/2021/03/Pet-2-Litros-Coca-Cola-PNG.png"
+		);
+		retryCheckFunction(
+			async () => {
+				const response = await assistant?.receiveMessage();
+				if (response) {
+					console.log(response);
+					return true;
+				}
+				return false;
+			},
+			1000,
+			10
+		);
+	}
 
-  return (
-    <>
-      <div>
-        <form action="" method="post" encType="multipart/form-data">
-          <label htmlFor="image">Upload image:</label>
-          <input type="file" accept="image/*;capture=camera" />
-          <br />
-          <input type="submit" name="submit" value="Submit" />
-        </form>
-      </div>
-    </>
-  );
+	useEffect(() => {
+		void initAssistant();
+	}, []);
+
+	return (
+		<>
+			{!assistant && <div>Loading...</div>}
+
+			{assistant && (
+				<div className="pt-[38px]">
+					<Formik
+						initialValues={{}}
+						onSubmit={onImageUpload}
+					>
+						{() => (
+							<Form className="flex flex-col gap-3">
+								<Input />
+								<div className="flex pt-5">
+									<SuccessButton />
+								</div>
+							</Form>
+						)}
+					</Formik>
+				</div>
+			)}
+		</>
+	);
 }
