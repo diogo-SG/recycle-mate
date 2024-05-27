@@ -4,7 +4,7 @@ import { SuccessButton } from "../components/SuccessButton";
 import { Assistant } from "../assistant";
 import { Button } from "../components/Button";
 import logo from "../assets/logo.png";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import AssistantContext from "../context/AssistantContext";
 // import { useFileStorage } from "../hooks/useFileStorage";
 
@@ -34,7 +34,9 @@ async function retryCheckFunction(
 }
 
 export function Home() {
-	const { assistant, setAssistant } = useContext(AssistantContext);
+	const { assistant, setAssistant, responseMessage, setResponseMessage } =
+		useContext(AssistantContext);
+	const [isLoading, setIsLoading] = useState(false);
 	// const { uploadFiles, uploadedFiles } = useFileStorage();
 
 	async function initAssistant() {
@@ -44,6 +46,7 @@ export function Home() {
 	}
 
 	async function onImageUpload() {
+		setIsLoading(true);
 		await assistant?.sendMessage(
 			"https://franoidelivery.com.br/wp-content/uploads/2021/03/Pet-2-Litros-Coca-Cola-PNG.png"
 		);
@@ -51,7 +54,8 @@ export function Home() {
 			async () => {
 				const response = await assistant?.receiveMessage();
 				if (response) {
-					console.log(response);
+					setResponseMessage(response);
+					setIsLoading(false);
 					return true;
 				}
 				return false;
@@ -66,37 +70,72 @@ export function Home() {
 	}, []);
 
 	return (
-    <>
-		{!assistant && <div>Loading...</div>}
+		<>
+			{!assistant && (
+				<span className="loading loading-spinner loading-lg">loading</span>
+			)}
 
-		{assistant && (
-			<div className="flex items-center flex-col">
-			<img src={logo} className="h-80 mb-4" alt="Let's get it sorted logo" />
-			<div className="text-center">
-				<div className="max-w-md">
-					<p className="py-3">
-						Take a picture of any kind of waste and we will tell you how to recycle it. Earn points and compete with
-						others to save the planet!
-					</p>
-					<Button>Get started</Button>
-				</div>
-			</div>
-			<br></br>
-			<Formik
-					initialValues={{}}
-					onSubmit={onImageUpload}
-				>
-					{() => (
-						<Form className="flex flex-col gap-3">
-							<Input />
-							<div className="flex pt-5">
-								<SuccessButton />
-							</div>
-						</Form>
+			{assistant && (
+				<div className="flex items-center flex-col">
+					<img
+						src={logo}
+						className="h-80 mb-4"
+						alt="Let's get it sorted logo"
+					/>
+					<div className="text-center">
+						<div className="max-w-md">
+							<p className="py-3">
+								Take a picture of any kind of waste and we will tell you how to
+								recycle it. Earn points and compete with others to save the
+								planet!
+							</p>
+							<Button>Get started</Button>
+						</div>
+					</div>
+					<br></br>
+					{!responseMessage && !isLoading && (
+						<Formik initialValues={{}} onSubmit={onImageUpload}>
+							{() => (
+								<Form className="flex flex-col gap-3">
+									<Input />
+									<div className="flex pt-5">
+										<SuccessButton />
+									</div>
+								</Form>
+							)}
+						</Formik>
 					)}
-				</Formik>
-		</div>
-		)}
-    </>
+					{isLoading && (
+						<div>
+							<span className="loading loading-spinner loading-lg">
+								loading
+							</span>
+						</div>
+					)}
+					{responseMessage && !isLoading && (
+						<div>
+							<h1>{responseMessage.nameOfObject}</h1>
+							<ul>
+								<li>Where to recycle: {responseMessage.whereToRecycle}</li>
+								<li>How to recycle: {responseMessage.howToRecycle}</li>
+								<li>
+									CO2 Estimative Reduction:{" "}
+									{responseMessage.co2EstimativeReduction}
+								</li>
+								<li>Materials: {responseMessage.objectMaterials}</li>
+								<li></li>
+							</ul>
+							<Button onClick={() => {
+								setResponseMessage(null)
+								setIsLoading(false)
+								window.location.reload()
+							}}>
+								Try a new object
+							</Button>
+						</div>
+					)}
+				</div>
+			)}
+		</>
 	);
 }
