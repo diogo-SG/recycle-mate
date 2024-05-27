@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { Assistant } from "../assistant";
 import { Button } from "../components/Button";
 import logo from "../assets/logo.png";
+import { useFileStorage } from "../hooks/useFileStorage";
 
 export function Home() {
+  const { uploadFiles, uploadedFiles } = useFileStorage();
+
   //   const [message, setMessage] = useState<string>("");
   //   const [assistantResponse, setAssistantResponse] = useState<string>("");
 
