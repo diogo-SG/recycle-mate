@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import logo from "../assets/logo.png";
 import { useContext, useEffect } from "react";
 import AssistantContext from "../context/AssistantContext";
+// import { useFileStorage } from "../hooks/useFileStorage";
 
 async function retryCheckFunction(
 	checkFn: () => Promise<boolean>,
@@ -34,6 +35,7 @@ async function retryCheckFunction(
 
 export function Home() {
 	const { assistant, setAssistant } = useContext(AssistantContext);
+	// const { uploadFiles, uploadedFiles } = useFileStorage();
 
 	async function initAssistant() {
 		const assistant = new Assistant();
