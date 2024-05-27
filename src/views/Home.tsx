@@ -1,7 +1,7 @@
 import { Form, Formik, FormikProps } from "formik";
 import { Input } from "../components/inputs/Input";
 import { Assistant } from "../assistant";
-import { Button } from "../components/Button";
+import { Button, DisabledButton } from "../components/Button";
 import logo from "../assets/logo.png";
 import { useContext, useEffect, useState, useRef } from "react";
 import AssistantContext from "../context/AssistantContext";
@@ -110,7 +110,7 @@ export function Home() {
 								recycle it. Earn points and compete with others to save the
 								planet!
 							</p>
-							<Button>Get started</Button>
+							<DisabledButton >Get started uploading an image bellow!</DisabledButton>
 						</div>
 					</div>
 					<br></br>
