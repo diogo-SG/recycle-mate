@@ -4,10 +4,11 @@ import { SuccessButton } from "../components/SuccessButton";
 import { Assistant } from "../assistant";
 import { Button } from "../components/Button";
 import logo from "../assets/logo.png";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import AssistantContext from "../context/AssistantContext";
 import { useFileStorage } from "../hooks/useFileStorage";
 import * as Yup from "yup";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const validationSchema = Yup.object().shape({
   picture: Yup.mixed(),
@@ -43,8 +44,9 @@ async function retryCheckFunction(
 }
 
 export function Home() {
-  const { assistant, setAssistant } = useContext(AssistantContext);
+  const { assistant, setAssistant, responseMessage, setResponseMessage } = useContext(AssistantContext);
   const { uploadFiles, uploadedFiles, deleteFile, clearFileFromState } = useFileStorage();
+  const [isLoading, setIsLoading] = useState(false);
   const formikRef = useRef<FormikProps<any> | null>(null);
 
   async function initAssistant() {
@@ -72,24 +74,24 @@ export function Home() {
     await assistant?.sendMessage(uploadedFile.url);
   }
 
-  async function onImageUpload(values: any) {
-    console.log(values, "values");
-    // await assistant?.sendMessage(
-    //   "https://franoidelivery.com.br/wp-content/uploads/2021/03/Pet-2-Litros-Coca-Cola-PNG.png"
-    // );
-    // retryCheckFunction(
-    //   async () => {
-    //     const response = await assistant?.receiveMessage();
-    //     if (response) {
-    //       console.log(response);
-    //       return true;
-    //     }
-    //     return false;
-    //   },
-    //   1000,
-    //   10
-    // );
-  }
+  // async function onImageUpload(values: any) {
+  //   console.log(values, "values");
+  // await assistant?.sendMessage(
+  //   "https://franoidelivery.com.br/wp-content/uploads/2021/03/Pet-2-Litros-Coca-Cola-PNG.png"
+  // );
+  // retryCheckFunction(
+  //   async () => {
+  //     const response = await assistant?.receiveMessage();
+  //     if (response) {
+  //       console.log(response);
+  //       return true;
+  //     }
+  //     return false;
+  //   },
+  //   1000,
+  //   10
+  // );
+  // }
 
   useEffect(() => {
     void initAssistant();
@@ -97,7 +99,7 @@ export function Home() {
 
   return (
     <>
-      {!assistant && <div>Loading...</div>}
+      {!assistant && <LoadingSpinner size="xl" />}
 
       {assistant && (
         <div className="flex items-center flex-col">
@@ -112,10 +114,11 @@ export function Home() {
             </div>
           </div>
           <br></br>
+
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={onImageUpload}
+            onSubmit={() => void 0}
             innerRef={formikRef}>
             {() => (
               <Form className="flex flex-col gap-3">
@@ -123,7 +126,7 @@ export function Home() {
                   type="picture"
                   name="picture"
                   settings={{
-                    onChange: (value) => startAnalysis(value),
+                    onChange: async (value) => await startAnalysis(value),
                     uploadHandlers: {
                       userId: "TEST",
                       clearFileFromState,
@@ -133,12 +136,30 @@ export function Home() {
                     },
                   }}
                 />
-                <div className="flex pt-5">
-                  <SuccessButton />
-                </div>
               </Form>
             )}
           </Formik>
+
+          {responseMessage && !isLoading && (
+            <div>
+              <h1>{responseMessage.nameOfObject}</h1>
+              <ul>
+                <li>Where to recycle: {responseMessage.whereToRecycle}</li>
+                <li>How to recycle: {responseMessage.howToRecycle}</li>
+                <li>CO2 Estimative Reduction: {responseMessage.co2EstimativeReduction}</li>
+                <li>Materials: {responseMessage.objectMaterials}</li>
+                <li></li>
+              </ul>
+              <Button
+                onClick={() => {
+                  setResponseMessage(null);
+                  setIsLoading(false);
+                  window.location.reload();
+                }}>
+                Try a new object
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </>
