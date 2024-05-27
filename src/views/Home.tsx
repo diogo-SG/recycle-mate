@@ -1,7 +1,7 @@
 import { Form, Formik, FormikProps } from "formik";
 import { Input } from "../components/inputs/Input";
 import { Assistant } from "../assistant";
-import { Button, DisabledButton } from "../components/Button";
+import { DisabledButton } from "../components/Button";
 import logo from "../assets/logo.png";
 import { useContext, useEffect, useState, useRef } from "react";
 import AssistantContext from "../context/AssistantContext";
@@ -115,58 +115,55 @@ export function Home() {
 					</div>
 					<br></br>
 
-					<Formik
-						initialValues={initialValues}
-						validationSchema={validationSchema}
-						onSubmit={() => void 0}
-						innerRef={formikRef}
-					>
-						{() => (
-							<Form className="flex flex-col gap-3">
-								<Input
-									type="picture"
-									name="picture"
-									settings={{
-										onChange: async (value) => await startAnalysis(value),
-										uploadHandlers: {
-											userId: "TEST",
-											clearFileFromState,
-											uploadFiles,
-											uploadedFiles,
-											deleteFile,
-										},
-									}}
-								/>
-							</Form>
-						)}
-					</Formik>
-
-					{responseMessage && !isLoading && (
-						<div>
-							<h1>{responseMessage.nameOfObject}</h1>
-							<ul>
-								<li>Where to recycle: {responseMessage.whereToRecycle}</li>
-								<li>How to recycle: {responseMessage.howToRecycle}</li>
-								<li>
-									CO2 Estimative Reduction:{" "}
-									{responseMessage.co2EstimativeReduction}
-								</li>
-								<li>Materials: {responseMessage.objectMaterials}</li>
-								<li></li>
-							</ul>
-							<Button
-								onClick={() => {
-									setResponseMessage(null);
-									setIsLoading(false);
-									window.location.reload();
-								}}
-							>
-								Try a new object
-							</Button>
-						</div>
-					)}
-				</div>
-			)}
-		</>
-	);
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={() => void 0}
+            innerRef={formikRef}>
+            {() => (
+              <Form className="flex flex-col gap-3">
+                <Input
+                  type="picture"
+                  name="picture"
+                  settings={{
+                    onChange: async (value) => await startAnalysis(value),
+                    uploadHandlers: {
+                      userId: "TEST",
+                      clearFileFromState,
+                      uploadFiles,
+                      uploadedFiles,
+                      deleteFile,
+                    },
+                  }}
+                />
+              </Form>
+            )}
+          </Formik>
+          {isLoading ? (
+            <LoadingSpinner size="xl" />
+          ) : responseMessage ? (
+            <>
+              <h1>{responseMessage.nameOfObject}</h1>
+              <ul>
+                <li>
+                  <b>Where to recycle:</b> {responseMessage.whereToRecycle}
+                </li>
+                <li>
+                  <b>How to recycle:</b> {responseMessage.howToRecycle}
+                </li>
+                <li>
+                  <b>CO2 Estimative Reduction:</b>
+                  {responseMessage.co2EstimativeReduction}
+                </li>
+                <li>
+                  <b>Materials:</b> {responseMessage.objectMaterials}
+                </li>
+                <li></li>
+              </ul>
+            </>
+          ) : null}
+        </div>
+      )}
+    </>
+  );
 }
