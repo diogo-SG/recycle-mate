@@ -15,16 +15,17 @@ export class Assistant {
 		this.run = null;
 	}
 
-  async Init() {
+  async init() {
     this.assistant = await this.openai.beta.assistants.create({
       model: "gpt-4o",
       instructions:
-        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format",
+        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format with the following fields: whereToRecycle, howToRecycle, co2EstimativeReduction (Only with the weight and the materials the object have), objectMaterials. Just send me the object json without markdown syntax",
+				temperature: 0
     });
-    this.thread = await this.openai.beta.threads.create();
+		this.thread = await this.openai.beta.threads.create();
   }
 
-  async RunThread() {
+  async createAndPoolRun(): Promise<void> {
     if (this.thread && this.assistant) {
       this.run = await this.openai.beta.threads.runs.createAndPoll(this.thread.id, {
         assistant_id: this.assistant.id,
@@ -33,24 +34,31 @@ export class Assistant {
     }
   }
 
-  async ResolveRun() {
-    console.log("this.run", this.run);
+  async receiveMessage(): Promise<string | undefined> {
     if (this.run?.status === "completed" && this.thread) {
       const messages = await this.openai.beta.threads.messages.list(this.thread.id);
-      const responseMessageObj = messages.data[0];
-      const responseMessageContent = responseMessageObj.content[0];
+      const responseMessageObj = messages.data[messages.data.length - 1];
+      const responseMessageContent = responseMessageObj.content[0] as {
+				text: {
+					value: string;
+				}
+			};
 
-      this.run = null;
-      return { responseMessageObj, responseMessageContent };
+			const responseMessage = responseMessageContent.text.value
+
+			this.run = null;
+
+      return responseMessage;
     }
   }
 
-  async UserMessage(content: string) {
-    if (this.thread) {
-      return this.openai.beta.threads.messages.create(this.thread.id, {
+	async sendMessage(content: string): Promise<void> {
+		await this.createAndPoolRun();
+		if (this.thread) {
+      await this.openai.beta.threads.messages.create(this.thread.id, {
         role: "user",
         content: content,
       });
     }
-  }
+	}
 }
