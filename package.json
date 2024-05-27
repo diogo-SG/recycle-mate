@@ -10,14 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.19",
     "classnames": "^2.5.1",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.1",
+    "flowbite": "^2.3.0",
     "formik": "^2.4.6",
     "openai": "^4.47.1",
+    "postcss": "^8.4.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
