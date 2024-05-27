@@ -19,8 +19,8 @@ export class Assistant {
     this.assistant = await this.openai.beta.assistants.create({
       model: "gpt-4o",
       instructions:
-        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format with the following fields: whereToRecycle, howToRecycle, co2EstimativeReduction (value based only on the materials of the object, take in consideration the weight and the materials it has) objectMaterials. Just send me the object json without markdown syntax",
-				temperature: 0.1
+        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format with the following fields: whereToRecycle, howToRecycle, co2EstimativeReduction (Only with the weight and the materials the object have), objectMaterials. Just send me the object json without markdown syntax",
+				temperature: 0
     });
 		this.thread = await this.openai.beta.threads.create();
   }
