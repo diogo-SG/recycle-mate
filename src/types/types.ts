@@ -63,7 +63,7 @@ export interface FileUploadHandlersShape {
 
 export interface InputPictureSettingsShape extends InputSettingsShape {
   onRemove?: (value: string) => void | undefined;
-  onChange?: (value: string) => void | undefined;
+  onChange?: (value: string) => Promise<void> | void | undefined;
   placeholder?: string;
   uploadHandlers?: FileUploadHandlersShape;
   externalRef?: Ref<any>;

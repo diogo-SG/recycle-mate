@@ -8,10 +8,11 @@ import LoadingSpinner from "../LoadingSpinner";
 
 export interface InputSelectFileProps {
   name: string;
+  onChange?: (value: string) => Promise<void> | void | undefined;
   settings?: InputPictureSettingsShape;
 }
 export function InputPicture({ name, settings }: InputSelectFileProps) {
-  const { uploadHandlers, placeholder, externalRef } = settings || {};
+  const { uploadHandlers, placeholder, externalRef, onChange } = settings || {};
   const { uploadFiles, uploadedFiles, deleteFile, userId, clearFileFromState } = uploadHandlers || {};
   const [isLoading, setIsLoading] = useState(false);
   const [field, meta] = useField(name);
@@ -25,7 +26,7 @@ export function InputPicture({ name, settings }: InputSelectFileProps) {
     setPreviewImage(placeholder || placeholderImageSrc);
   }, [placeholder]);
 
-  function onChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function onChangeFn(event: React.ChangeEvent<HTMLInputElement>) {
     setIsLoading(true);
     const files = Array.prototype.slice.call(event.target.files);
     const reader = new FileReader();
@@ -41,7 +42,7 @@ export function InputPicture({ name, settings }: InputSelectFileProps) {
     })(files[0]);
     reader.readAsDataURL(files[0]);
 
-    //(settings?.onChange || (() => void 0))(files[0]);
+    (settings?.onChange || (() => void 0))(files[0]);
   }
 
   useEffect(() => {
@@ -141,7 +142,7 @@ export function InputPicture({ name, settings }: InputSelectFileProps) {
         aria-describedby="file_input_help"
         type="file"
         accept={"image/*"}
-        onChange={onChange}
+        onChange={onChangeFn}
         disabled={isLoading}
       />
       <div className="grid h-[140px] w-[140px] place-items-center overflow-hidden bg-gray-100">

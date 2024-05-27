@@ -1,21 +1,15 @@
 import { useField } from "formik";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import InputTypePassword from "./InputTypePassword";
+//import InputTypePassword from "./InputTypePassword";
 import InputPicture from "./InputPicture";
 import { InputProps } from "../../types/types";
 
 function renderChildInput({ type, name, settings, onChange }: InputProps) {
   switch (type) {
-    case "password":
-      return <InputTypePassword name={name} settings={settings} />;
+    // case "password":
+    //   return <InputTypePassword name={name} settings={settings} />;
     case "picture":
-      return (
-        <InputPicture
-          name={name}
-          settings={settings}
-          //onChange={onChange}
-        />
-      );
+      return <InputPicture name={name} settings={settings} onChange={onChange} />;
     default:
       return null;
   }

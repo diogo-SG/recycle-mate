@@ -1,6 +1,5 @@
 import { Form, Formik, FormikProps } from "formik";
 import { Input } from "../components/inputs/Input";
-import { SuccessButton } from "../components/SuccessButton";
 import { Assistant } from "../assistant";
 import { Button } from "../components/Button";
 import logo from "../assets/logo.png";
@@ -126,7 +125,7 @@ export function Home() {
                   type="picture"
                   name="picture"
                   settings={{
-                    onChange: async (value) => await startAnalysis(value),
+                    // onChange: async (value) => await startAnalysis(value),
                     uploadHandlers: {
                       userId: "TEST",
                       clearFileFromState,

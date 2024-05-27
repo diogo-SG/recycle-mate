@@ -3,18 +3,16 @@ import { createContext } from "react";
 import { Assistant } from "../assistant";
 
 export type ResponseMessage = {
-	nameOfObject: string;
-	whereToRecycle: string;
-	howToRecycle: string;
-	co2EstimativeReduction: string;
-	objectMaterials: string[];
+  nameOfObject: string;
+  whereToRecycle: string;
+  howToRecycle: string;
+  co2EstimativeReduction: string;
+  objectMaterials: string[];
 };
 const AssistantContext = createContext({
-	assistant: null as Assistant | null,
-	setAssistant: ((assistant) => {}) as (assistant: Assistant | null) => void,
-	responseMessage: null as ResponseMessage | null,
-	setResponseMessage: ((responseMessage) => {}) as (
-		responseMessage: ResponseMessage | null
-	) => void,
+  assistant: null as Assistant | null,
+  setAssistant: (() => {}) as (assistant: Assistant | null) => void,
+  responseMessage: null as ResponseMessage | null,
+  setResponseMessage: (() => {}) as (responseMessage: ResponseMessage | null) => void,
 });
 export default AssistantContext;

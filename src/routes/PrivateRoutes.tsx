@@ -1,24 +1,24 @@
-import { Outlet } from "react-router-dom";
-import { Layout } from "../views/Layout";
+// import { Outlet } from "react-router-dom";
+// import { Layout } from "../views/Layout";
 
-const PrivateRoutes = () => {
-  // const contextValues = useContext(UserContext);
+// const PrivateRoutes = () => {
+//   // const contextValues = useContext(UserContext);
 
-  // return contextValues !== null &&
-  //   !contextValues.isLoading &&
-  //   contextValues.user == null ? (
-  //   <Layout>
-  //     <Outlet />
-  //   </Layout>
-  // ) : (
-  //   <Navigate to={ROUTE_NAME.DASHBOARD} />
-  // );
+//   // return contextValues !== null &&
+//   //   !contextValues.isLoading &&
+//   //   contextValues.user == null ? (
+//   //   <Layout>
+//   //     <Outlet />
+//   //   </Layout>
+//   // ) : (
+//   //   <Navigate to={ROUTE_NAME.DASHBOARD} />
+//   // );
 
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
-  );
-};
+//   return (
+//     <Layout>
+//       <Outlet />
+//     </Layout>
+//   );
+// };
 
-export default PrivateRoutes;
+// export default PrivateRoutes;
