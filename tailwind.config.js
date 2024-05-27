@@ -63,6 +63,7 @@ export default {
     },
     extend: {},
   },
+  purge: ["./src/**/*.html", "./src/**/*.vue", "./src/**/*.jsx", "./src/**/*.tsx"],
   // eslint-disable-next-line no-undef
   plugins: [require("flowbite/plugin")],
 };
