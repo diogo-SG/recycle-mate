@@ -154,14 +154,6 @@ export function Home() {
                 </li>
                 <li></li>
               </ul>
-              <Button
-                onClick={() => {
-                  setResponseMessage(null);
-                  setIsLoading(false);
-                  window.location.reload();
-                }}>
-                Try a new object
-              </Button>
             </>
           ) : null}
         </div>
