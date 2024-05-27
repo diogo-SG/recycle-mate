@@ -1,5 +1,4 @@
 import "flowbite";
-import "./App.css";
 import { About } from "./views/About";
 import { Home } from "./views/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
