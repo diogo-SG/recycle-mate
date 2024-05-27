@@ -10,7 +10,7 @@ import { Layout } from "./views/Layout";
 
 function App() {
   return (
-    <>
+    <div className="bg-primary-50 ">
       <Router>
         <Routes>
           <Route element={<Layout />}>
@@ -22,37 +22,8 @@ function App() {
           </Route>
         </Routes>
       </Router>
-      <Home />
-    </>
+    </div>
   );
 }
 
 export default App;
-
-// async function onImageUpload() {
-//   console.log(assistant)
-//   console.log('heyo')
-// }
-
-// return (
-//   <>
-//     <div className="pt-[38px]">
-//       <Formik
-//         initialValues={{}}
-//         onSubmit={onImageUpload}
-//         // validationSchema={schema}
-//       >
-//         {() => (
-//           <Form className="flex flex-col gap-3">
-//             <Input />
-//             <div className="flex pt-5">
-//               <SuccessButton
-//               // disabled={Object.keys(errors).length > 0}
-//               />
-//             </div>
-//           </Form>
-//         )}
-//       </Formik>
-//     </div>
-//   </>
-// );
