@@ -37,5 +37,6 @@
     "eslint-plugin-react-refresh": "^0.4.7",
     "typescript": "^5.4.5",
     "vite": "^5.2.11"
-  }
+  },
+  "packageManager": "pnpm@8.10.4+sha256.df3202c6c8fd345be5ba6a4199297582d5bebf8963822aa3344f4cd2b8be8d43"
 }
