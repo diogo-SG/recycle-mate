@@ -144,7 +144,7 @@ export function Home() {
           ) : responseMessage ? (
             <>
               <h1>{responseMessage.nameOfObject}</h1>
-              <ul>
+              <ul className="mb-10">
                 <li>
                   <b>Where to recycle:</b> {responseMessage.whereToRecycle}
                 </li>
