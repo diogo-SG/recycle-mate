@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { ResponseMessage } from "./context/AssistantContext";
 
 export class Assistant {
   openai: OpenAI = new OpenAI({
@@ -19,7 +20,7 @@ export class Assistant {
     this.assistant = await this.openai.beta.assistants.create({
       model: "gpt-4o",
       instructions:
-        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format with the following fields: whereToRecycle, howToRecycle, co2EstimativeReduction (Only with the weight and the materials the object have), objectMaterials. Just send me the object json without markdown syntax",
+        "You are an image recognition bot which analyses photos to determine how they can be recycled in Portugal and other countries in Europe following similar recycling systems. Always return in json format with the following fields: nameOfObject, whereToRecycle (with this format: Name bin - color), howToRecycle (how prepare the object before placing into the bin), co2EstimativeReduction (Only with the weight and the materials the object have and with the same format e. g. 0.05 kg), objectMaterials. Just send me the object json without markdown syntax. Resolve the image as url.",
 				temperature: 0
     });
 		this.thread = await this.openai.beta.threads.create();
@@ -34,7 +35,7 @@ export class Assistant {
     }
   }
 
-  async receiveMessage(): Promise<string | undefined> {
+  async receiveMessage(): Promise<ResponseMessage | undefined> {
     if (this.run?.status === "completed" && this.thread) {
       const messages = await this.openai.beta.threads.messages.list(this.thread.id);
       const responseMessageObj = messages.data[messages.data.length - 1];
@@ -44,11 +45,11 @@ export class Assistant {
 				}
 			};
 
-			const responseMessage = responseMessageContent.text.value
+			const responseMessage = typeof responseMessageContent.text.value === 'string' ? JSON.parse(responseMessageContent.text.value) : responseMessageContent.text.value; 
 
 			this.run = null;
 
-      return responseMessage;
+      return responseMessage as ResponseMessage;
     }
   }
 
