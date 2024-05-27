@@ -5,10 +5,15 @@ export class Assistant {
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
     dangerouslyAllowBrowser: true,
   });
-  assistant: OpenAI.Beta.Assistants.Assistant | null = null;
-  thread: OpenAI.Beta.Threads.Thread | null = null;
-  run: OpenAI.Beta.Threads.Runs.Run | null = null;
-  //constructor() {}
+  assistant: OpenAI.Beta.Assistants.Assistant | null;
+  thread: OpenAI.Beta.Threads.Thread | null;
+  run: OpenAI.Beta.Threads.Runs.Run | null;
+
+  constructor() {
+		this.assistant = null;
+		this.thread = null;
+		this.run = null;
+	}
 
   async Init() {
     this.assistant = await this.openai.beta.assistants.create({
@@ -18,6 +23,7 @@ export class Assistant {
     });
     this.thread = await this.openai.beta.threads.create();
   }
+
   async RunThread() {
     if (this.thread && this.assistant) {
       this.run = await this.openai.beta.threads.runs.createAndPoll(this.thread.id, {
