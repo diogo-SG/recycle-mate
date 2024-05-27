@@ -1,31 +1,8 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import {
-  UploadTask,
-  getDownloadURL,
-  getMetadata,
-  ref,
-  uploadBytesResumable,
-  deleteObject,
-  FullMetadata,
-} from "firebase/storage";
+import { UploadTask, getDownloadURL, getMetadata, ref, uploadBytesResumable, deleteObject } from "firebase/storage";
 import { storage } from "../firebase/config";
-
-export interface UserUploadedDocument {
-  /** The original filename of the file */
-  ogFilename: string;
-  /** The URL of the file */
-  url: string;
-  /** The metadata of the file. Includes several essentials such as file name, type, size, and timestamps */
-  metadata: FullMetadata;
-  /** The width and height of the image, if applicable */
-  dimensions?: {
-    width: number;
-    height: number;
-  };
-  /** The file's version number. Tracks updates in case of batch file processing */
-  version: number;
-}
+import { UserUploadedDocument } from "../types/types";
 
 export function useFileStorage() {
   const [uploadedFiles, setUploadedFiles] = useState<UserUploadedDocument[] | null>(null);
@@ -135,6 +112,13 @@ export function useFileStorage() {
     }
   };
 
+  const clearFileFromState = async (filePath: string) => {
+    if (!uploadedFiles) return;
+    //await deleteFile(filePath);
+    const updatedFileArr = uploadedFiles.filter((item) => item.metadata.fullPath !== filePath);
+    setUploadedFiles(updatedFileArr);
+  };
+
   const buildStoragePath = (userId: string) => {
     if (!userId) return null;
 
@@ -152,5 +136,6 @@ export function useFileStorage() {
     isUpdating,
     setIsUpdating,
     getFileMetadata,
+    clearFileFromState,
   };
 }
